@@ -1,0 +1,21 @@
+#!/bin/sh
+
+run_hook() {
+    . /etc/decryptkeydevice.conf
+
+    for DISKID in $DECRYPTKEYDEVICE_DISKID
+    do
+	DEVICE=/dev/disk/by-id/$DISKID
+	if [ -e $DEVICE ]
+	then
+	    dd if=$DEVICE of=/crypto_keyfile.bin skip=$DECRYPTKEYDEVICE_SKIPBLOCKS bs=$DECRYPTKEYDEVICE_BLOCKSIZE count=$DECRYPTKEYDEVICE_READBLOCKS
+	fi
+    done
+}
+
+help() {
+    cat <<EOF
+If a device defined in /etc/decryptkeydevice.conf is found,
+extract the keyfile from it.
+EOF
+}

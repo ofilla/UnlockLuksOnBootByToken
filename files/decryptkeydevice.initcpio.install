@@ -1,0 +1,15 @@
+#!/bin/sh
+
+build() {
+    add_file /etc/decryptkeydevice.conf
+    add_runscript
+}
+
+help() {
+    cat <<EOF
+If a device defined in /etc/decryptkeydevice.conf is found,
+extract the keyfile from it. This hook must be used immediately
+before using the `encrypt` hook.
+EOF
+}
+
