@@ -7,7 +7,7 @@ mkdir /etc/decryptkeydevice
 cp decryptkeydevice.sh $KEYSCRIPT
 chmod +x $KEYSCRIPT
 
-cp cryptroot /etc/initramfs-tools/conf.d/cryptroot
+echo "source=$CRYPTROOT_DEVICE,target=$ROOT_NAME,lvm=$LVM_ROOT,keyscript=$KEYSCRIPT,key=$KEY_DEVICE" > /etc/initramfs-tools/conf.d/cryptroot
 chmod +x /etc/initramfs-tools/conf.d/cryptroot
 
 cp decryptkeydevice.hook /etc/initramfs-tools/hooks/decryptkeydevice.hook
