@@ -4,8 +4,8 @@
 mkdir /etc/decryptkeydevice
 
 # update device ids in in this file
-cp decryptkeydevice.sh /etc/decryptkeydevice/decryptkeydevice.sh
-chmod +x /etc/decryptkeydevice/decryptkeydevice.sh
+cp decryptkeydevice.sh $KEYSCRIPT
+chmod +x $KEYSCRIPT
 
 cp cryptroot /etc/initramfs-tools/conf.d/cryptroot
 chmod +x /etc/initramfs-tools/conf.d/cryptroot

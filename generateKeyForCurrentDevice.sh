@@ -1,8 +1,9 @@
 #!/bin/sh
-# generates a decryption key for the current /dev/sdb
+# generates a decryption key for the current $KEY_DEVICE
 
-dd if=/dev/urandom of=/dev/sdb bs=512 seek=1 count=60 
+blocks_to_write=$(($KEY_DEVICE_LAST_WRITABLE - $KEY_DEVICE_FIRST_WRITABLE))
+dd if=/dev/urandom of=$KEY_DEVICE bs=$BLOCKSIZE seek=$KEY_DEVICE_FIRST_WRITABLE count=$blocks_to_write
 
-dd if=/dev/sdb bs=512 skip=1 count=4 > tempKeyFile.bin 
+dd if=$KEY_DEVICE bs=$BLOCKSIZE skip=$KEY_DEVICE_START count=$BLOCK_NUMBER of=tempKeyFile.bin
 
-cryptsetup luksAddKey /dev/sda5 tempKeyFile.bin 
+cryptsetup luksAddKey $CRYPTROOT_DEVICE tempKeyFile.bin
