@@ -1,20 +1,34 @@
 #!/bin/sh
 
-run_hook() {
-    . /etc/decryptkeydevice.conf
+DEBUG=false
 
-    for DISKID in $DECRYPTKEYDEVICE_DISKID
-    do
-	DEVICE=/dev/disk/by-id/$DISKID
-	if [ -e $DEVICE ]
-	then
-	    dd if=$DEVICE of=/crypto_keyfile.bin skip=$DECRYPTKEYDEVICE_SKIPBLOCKS bs=$DECRYPTKEYDEVICE_BLOCKSIZE count=$DECRYPTKEYDEVICE_READBLOCKS
-	fi
-    done
+dbg() {
+	$DEBUG && echo decryptkeydevice: "$@"
+}
+
+
+run_hook() {
+	dbg "decryptkeydevice: starting"
+	sleep 2
+	. /etc/decryptkeydevice.conf
+
+	for DISKID in $DECRYPTKEYDEVICE_DISKID
+	do
+		dbg "decryptkeydevice: checking $DISKID"
+		DEVICE="/dev/disk/by-id/$DISKID"
+		if [ -e $DEVICE ]
+		then
+			dd if="$DEVICE" of=/crypto_keyfile.bin skip=$DECRYPTKEYDEVICE_SKIPBLOCKS bs=$DECRYPTKEYDEVICE_BLOCKSIZE count=$DECRYPTKEYDEVICE_READBLOCKS status=none
+			dbg "read key from $DISKID"
+		else
+			dbg "device not found"
+		fi
+	done
+	dbg "decryptkeydevice: finished"
 }
 
 help() {
-    cat <<EOF
+	cat <<EOF
 If a device defined in /etc/decryptkeydevice.conf is found,
 extract the keyfile from it.
 EOF
